@@ -1,0 +1,31 @@
+{
+  "name": "raspi_speech_to_text",
+  "version": "1.0.0",
+  "description": "Raspberry Pi speech to text using Google Speech API",
+  "main": "app.js",
+  "scripts": {
+	"start": "node app.js",
+	"login": "gcloud auth application-default login",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elishuwon-mitchell/RaspberryPiSpeechToText.git"
+  },
+  "author": "Elishuwon Mitchell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elishuwon-mitchell/RaspberryPiSpeechToText/issues"
+  },
+  "homepage": "https://github.com/elishuwon-mitchell/RaspberryPiSpeechToText#readme",
+  "dependencies": {
+    "@google-cloud/speech": "^0.10.2",
+    "express": "^4.15.4",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0"
+  }
+}
