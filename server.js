@@ -1,12 +1,13 @@
-const express = require('express')
-const PROJECT = require('./utils/config.js') 
+const express = require('express');
+const path = require('path');
+const PROJECT = require('./utils/config.js');
 const Speech = require('@google-cloud/speech');
 const fs = require('fs');
 
 const app = express()
 
-const PORT = process.env.PORT || 3000;
-
+app.set('port', process.env.PORT || 3000);
+app.use('/', express.static(path.join(__dirname, '/public/')));
 
 // Instantiates a client
 const speechClient = Speech({
@@ -36,7 +37,10 @@ const request = {
 };
 
 app.get('/', function (req, res) {
-		
+	res.sendFile(__dirname + "/index.html");
+});
+
+app.get('/speech', function(req, res){
 	// Detects speech in the audio file
 	speechClient.recognize(request)
 	  .then((results) => {
@@ -46,9 +50,8 @@ app.get('/', function (req, res) {
 	  .catch((err) => {
 		console.error('ERROR:', err);
 	  });
-	
-})
+});
 
-app.listen(PORT, function () {
-  console.log('Speech app listening on port', PORT)
-})
+app.listen(app.get('port'), function () {
+  console.log('Speech app listening on port', app.get('port'));
+});
