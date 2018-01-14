@@ -6,11 +6,11 @@ from subprocess import call
 cmd_beg= 'espeak '
 cmd_end= ' 2>/dev/null' # To play back the stored .wav file and to dump the std errors to /dev/null
 
-options = ["-ven+f5 -s 120"]
+options = ["-ven+f5"]
 space = " "
 
-#sentence = '\"Bonjour. Que peux-je faire pour vous aujourd\'hui.?"'
-sentence = '\"You are my creator, Elie."'
+sentence = '\"Bonjour et bienvenue."'
+#sentence = '\"You are my creator, Elie."'
 
 command = cmd_beg;
 
