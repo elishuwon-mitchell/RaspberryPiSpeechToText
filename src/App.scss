@@ -1,3 +1,9 @@
-#appContainer{
-	text-align: center;
+.appContainer{
+	h1{
+		text-align: center;
+	}
+
+	#responseContainer{
+		margin-top: 50px;
+	}
 }
