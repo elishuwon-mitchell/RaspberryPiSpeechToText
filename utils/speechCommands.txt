@@ -1,1 +1,2 @@
-arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw;aplay -r 16000 -t raw -f S16_LE speech.raw
+arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw;
+aplay -r 16000 -t raw -f S16_LE speech.raw;

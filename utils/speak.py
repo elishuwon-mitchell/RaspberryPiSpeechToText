@@ -9,7 +9,7 @@ cmd_end= ' 2>/dev/null' # To play back the stored .wav file and to dump the std 
 options = ["-ven+f5"]
 space = " "
 
-sentence = '\"Bonjour et bienvenue."'
+sentence = '\"Bonjour le monde."'
 #sentence = '\"You are my creator, Elie."'
 
 command = cmd_beg;

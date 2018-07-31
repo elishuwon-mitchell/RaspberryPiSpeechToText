@@ -16,8 +16,8 @@ app.get('/', function (req, res) {
 });
 
 function runSpeechRecording() {
-	// const command = "arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw;aplay -r 16000 -t raw -f S16_LE speech.raw";
-	const command = "sleep 2";
+	 const command = "arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw";
+	//const command = "sleep 2"; //test command to ensure blocking before hitting speech API
 	return new Promise((resolve, reject) => {
 		exec(command, (err, stdout, stderr) => {
 			if(err) {
@@ -39,7 +39,7 @@ app.get('/speech', async function(req, res) {
 		return res.status(500).send();
 	}
 	
-	return res.send("This is a test");
+	//return res.send("This is a test");
 	// Instantiates a client
 	const speechClient = Speech({
 		projectId: PROJECT.id
@@ -70,6 +70,7 @@ app.get('/speech', async function(req, res) {
 	// Detects speech in the audio file
 	speechClient.recognize(request).then((results) => {
 		const transcription = results[0].results[0].alternatives[0].transcript;
+		console.log("Translated text:", transcription);
 		res.send(transcription);		
 	}).catch((err) => {
 		console.error('ERROR:', err);
