@@ -1,5 +1,5 @@
 node_modules
 application_credentials.json
 utils/config.js
-public
 .DS_Store
+public
