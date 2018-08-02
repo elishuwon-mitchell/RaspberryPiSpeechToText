@@ -1,18 +1,40 @@
 import React, { Component } from 'react';
-import { Button } from 'material-ui';
-import PropTypes from 'prop-types';
+import { 
+	Button, 
+	AppBar, 
+	Toolbar, 
+	Typography, 
+	CircularProgress, 
+	Card, 
+	CardActions, 
+	CardContent, 
+	Divider,
+	MuiThemeProvider,
+	createMuiTheme
+} from '@material-ui/core';
 
 import axios from 'axios';
 import Countdown from 'react-countdown-now';
 
-import Response from "./Response.js";
+const theme = createMuiTheme({
+	palette: {
+	  type: 'dark',
+	  primary: {
+		main: '#66bb6a',
+	  },
+	  secondary: {
+		main: '#b71c1c',
+	  },
+	},
+});
 
 class App extends Component {
 	constructor() {
 		super();
 
 		this.state = {
-			response: undefined
+			response: undefined,
+			inProgress: false
 		};
 
 		this.handleRecordInput = this.handleRecordInput.bind(this);
@@ -23,8 +45,12 @@ class App extends Component {
 		axios.get("/speech").then((res) => {
 			console.log(res);
 			this.setState({
-				response: res
+				response: res,
+				inProgress: false
 			})
+		});
+		this.setState({
+			inProgress: true
 		});
 	}
 
@@ -36,20 +62,38 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="appContainer">
-				<h1> Speech to Text using Google Speech Api</h1>
-				<div className="buttonContainer">
-				<Button raised onClick={this.handleRecordInput} color="primary">
-					Record Input
-				</Button>
-				<Button raised onClick={this.handleClear} color="secondary">
-					Clear
-				</Button>
+			<MuiThemeProvider theme={theme}>
+				<div className="appContainer">
+					<AppBar position="static">
+						<Toolbar>
+							<Typography variant="headline" component="h1">
+								Speech to Text using Google Speech Api
+							</Typography>
+						</Toolbar>
+					</AppBar>
+					<Card className="cardContainer">
+						<CardContent>
+						{
+							this.state.inProgress ? 
+								<CircularProgress className="progress" thickness={7} /> 
+							:
+								<Typography component="p">
+									{this.state.response ? `You said: ${this.state.response.data}` : ''}
+								</Typography>
+						}
+						</CardContent>
+						<Divider />
+						<CardActions className="cardActions">
+							<Button onClick={this.handleRecordInput} color="primary">
+								Record Input
+							</Button>
+							<Button onClick={this.handleClear} color="secondary">
+								Clear
+							</Button>
+						</CardActions>
+					</Card>
 				</div>
-				<div id="responseContainer">
-					{this.state.response ? <Response translatedText={this.state.response.data} /> : ""}
-				</div>
-			</div>
+			</MuiThemeProvider>
 		)
 	};
 }

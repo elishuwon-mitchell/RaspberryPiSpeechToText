@@ -16,8 +16,8 @@ app.get('/', function (req, res) {
 });
 
 function runSpeechRecording() {
-	 const command = "arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw";
-	//const command = "sleep 2"; //test command to ensure blocking before hitting speech API
+	//const command = "arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw";
+	const command = "sleep 2"; //test command to ensure blocking before hitting speech API
 	return new Promise((resolve, reject) => {
 		exec(command, (err, stdout, stderr) => {
 			if(err) {
@@ -39,7 +39,9 @@ app.get('/speech', async function(req, res) {
 		return res.status(500).send();
 	}
 	
-	//return res.send("This is a test");
+	// Comment out line below to actually hit the Speech API
+	return res.send("This is a test");
+	
 	// Instantiates a client
 	const speechClient = Speech({
 		projectId: PROJECT.id

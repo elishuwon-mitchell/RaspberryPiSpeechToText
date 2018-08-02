@@ -2,8 +2,13 @@
 	h1{
 		text-align: center;
 	}
-
-	#responseContainer{
+	.cardContainer{
 		margin-top: 50px;
+		margin-left: 25%;
+		text-align: center;
+		width: 50%;
+		.cardActions{
+			justify-content: center;
+		}
 	}
 }

@@ -1,1 +1,10 @@
-.appContainer h1{text-align:center}.appContainer #responseContainer{margin-top:50px}
+.appContainer h1 {
+  text-align: center; }
+
+.appContainer .cardContainer {
+  margin-top: 50px;
+  margin-left: 25%;
+  text-align: center;
+  width: 50%; }
+  .appContainer .cardContainer .cardActions {
+    justify-content: center; }
