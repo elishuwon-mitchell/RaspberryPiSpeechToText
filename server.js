@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 
 function runSpeechRecording() {
 	//const command = "arecord -D plughw:1,0 -d 4 -r 16000 -t raw -f S16_LE speech.raw";
-	const command = "sleep 2"; //test command to ensure blocking before hitting speech API
+	const command = "sleep 4"; //test command to ensure blocking before hitting speech API
 	return new Promise((resolve, reject) => {
 		exec(command, (err, stdout, stderr) => {
 			if(err) {

@@ -42,6 +42,9 @@ class App extends Component {
 	};
 
 	handleRecordInput() {
+		this.setState({
+			inProgress: true
+		}, () => {
 		axios.get("/speech").then((res) => {
 			console.log(res);
 			this.setState({
@@ -49,8 +52,6 @@ class App extends Component {
 				inProgress: false
 			})
 		});
-		this.setState({
-			inProgress: true
 		});
 	}
 
