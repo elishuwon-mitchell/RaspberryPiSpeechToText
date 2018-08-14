@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const PROJECT = require('./utils/config.js');
-const Speech = require('@google-cloud/speech');
+const speech = require('@google-cloud/speech');
 const fs = require('fs');
 const { exec } = require('child_process');
 
@@ -43,9 +43,7 @@ app.get('/speech', async function(req, res) {
 	return res.send("This is a test");
 	
 	// Instantiates a client
-	const speechClient = Speech({
-		projectId: PROJECT.id
-	});
+	const client = new speech.SpeechClient();
 
 	// The name of the audio file to transcribe
 	const fileName = './speech.raw';
@@ -70,12 +68,13 @@ app.get('/speech', async function(req, res) {
 	};
 	
 	// Detects speech in the audio file
-	speechClient.recognize(request).then((results) => {
+	client.recognize(request).then((results) => {
 		const transcription = results[0].results[0].alternatives[0].transcript;
 		console.log("Translated text:", transcription);
 		res.send(transcription);		
 	}).catch((err) => {
 		console.error('ERROR:', err);
+		res.status(500).send(error);
 	});
 
 });
