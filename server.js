@@ -3,9 +3,12 @@ const path = require('path');
 const { exec } = require('child_process');
 const Storage = require('@google-cloud/storage');
 const PubSub = require(`@google-cloud/pubsub`);
-
+const http = require("http");
+const socketIo = require("socket.io");
 
 const app = express()
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Cloud storage initialization
 const storage = new Storage();
@@ -49,13 +52,7 @@ app.get('/run', async (req, res) => {
 
 	const bucketName = 'eli-mitchell';
 	const filename = './speech.raw';
-	const options = {
-		gzip: true,
-		metadata: {
-		  cacheControl: 'no-cache',
-		},
-	}
-	storage.bucket(bucketName).upload(filename, options).then(() => {
+	storage.bucket(bucketName).upload(filename).then(() => {
 		console.log(`${filename} uploaded to ${bucketName}.`);
 		return res.send(true);
 	}).catch(err => {
@@ -64,29 +61,31 @@ app.get('/run', async (req, res) => {
 
 	});
 
-})
-
-app.listen(app.get('port'), function () {
-  console.log('Speech app listening on port', app.get('port'));
 });
 
-// Create an event handler to handle messages
-let messageCount = 0;
-const messageHandler = message => {
-	const dataString = message.data.toString();
-	console.log(dataString);
-	const dataObj = JSON.parse(dataString);
-	console.log(dataObj);
-  	messageCount += 1;
-
-	// "Ack" (acknowledge receipt of) the message
-	message.ack();
+const getMessages = async socket => {
+	subscription.on(`message`, message => {
+		console.log("Message recieved from PubSub topic.");
+		const dataString = message.data.toString();
+		const dataObj = JSON.parse(dataString);
+		console.log("Translated speech is:" , dataObj.text);
+		socket.emit("messageRecieved", dataObj.text);
+		message.ack();
+		console.log("done");
+	});
+	setTimeout(() => {
+		//TODO: clean up message handler on connection close, something list below
+		// subscription.removeListener('message', messageHandler);
+		console.log(`Closing connection.`);
+	}, timeout * 1000);
 };
 
-// Listen for new messages until timeout is hit
-subscription.on(`message`, messageHandler);
+io.on("connection", socket => {
+	console.log("New client connected");
+	getMessages(socket)
+	socket.on("disconnect", () => console.log("Client disconnected"));
+});
 
-setTimeout(() => {
-  subscription.removeListener('message', messageHandler);
-  console.log(`${messageCount} message(s) received.`);
-}, timeout * 1000);
+server.listen(app.get('port'), function () {
+  console.log('Speech app listening on port', app.get('port'));
+});
