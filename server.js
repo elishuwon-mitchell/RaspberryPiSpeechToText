@@ -2,10 +2,19 @@ const express = require('express');
 const path = require('path');
 const { exec } = require('child_process');
 const Storage = require('@google-cloud/storage');
+const PubSub = require(`@google-cloud/pubsub`);
 
 
 const app = express()
+
+// Cloud storage initialization
 const storage = new Storage();
+
+// Cloud PubSub initialization
+const pubsub = new PubSub();
+const subscriptionName = 'node_app';
+const timeout = 60 * 5;
+const subscription = pubsub.subscription(subscriptionName);
 
 app.set('port', process.env.PORT || 3000);
 app.use('/', express.static(path.join(__dirname, '/public/')));
@@ -60,3 +69,24 @@ app.get('/run', async (req, res) => {
 app.listen(app.get('port'), function () {
   console.log('Speech app listening on port', app.get('port'));
 });
+
+// Create an event handler to handle messages
+let messageCount = 0;
+const messageHandler = message => {
+	const dataString = message.data.toString();
+	console.log(dataString);
+	const dataObj = JSON.parse(dataString);
+	console.log(dataObj);
+  	messageCount += 1;
+
+	// "Ack" (acknowledge receipt of) the message
+	message.ack();
+};
+
+// Listen for new messages until timeout is hit
+subscription.on(`message`, messageHandler);
+
+setTimeout(() => {
+  subscription.removeListener('message', messageHandler);
+  console.log(`${messageCount} message(s) received.`);
+}, timeout * 1000);
