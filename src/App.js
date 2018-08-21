@@ -15,6 +15,7 @@ import {
 
 import axios from 'axios';
 import Countdown from 'react-countdown-now';
+import socketIOClient from "socket.io-client";
 
 const theme = createMuiTheme({
 	palette: {
@@ -34,31 +35,41 @@ class App extends Component {
 
 		this.state = {
 			response: undefined,
-			inProgress: false
+			inProgress: false,
+			endpoint: "http://localhost:3000"
 		};
 
 		this.handleRecordInput = this.handleRecordInput.bind(this);
 		this.handleClear = this.handleClear.bind(this);
 	};
 
+	componentDidMount() {
+		const { endpoint } = this.state;
+		const socket = socketIOClient(endpoint);
+		socket.on("messageRecieved", data => {
+			console.log("data: ", data);
+			this.setState({ 
+				response: data,
+				inProgress: false
+			});
+		});
+	  }
+
 	handleRecordInput() {
 		this.setState({
 			inProgress: true
 		}, () => {
-		axios.get("/speech").then((res) => {
-			console.log(res);
-			this.setState({
-				response: res,
-				inProgress: false
-			})
-		});
+			axios.get("/run").then((res) => {
+				console.log("uploading to pubsub success?:", res);
+			});
 		});
 	}
 
 	handleClear() {
 		this.setState({
-			response: undefined
-		})
+			response: undefined,
+			inProgress: false
+		});
 	}
 
 	render() {
@@ -79,7 +90,7 @@ class App extends Component {
 								<CircularProgress className="progress" thickness={7} /> 
 							:
 								<Typography component="p">
-									{this.state.response ? `You said: ${this.state.response.data}` : ''}
+									{this.state.response ? `You said: ${this.state.response}` : ''}
 								</Typography>
 						}
 						</CardContent>

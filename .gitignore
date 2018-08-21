@@ -3,3 +3,5 @@ application_credentials.json
 utils/config.js
 .DS_Store
 public
+cloud_functions/*/node_modules
+cloud_functions/*/package-lock.json
