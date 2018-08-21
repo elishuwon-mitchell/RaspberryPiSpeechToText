@@ -89,7 +89,7 @@ class App extends Component {
 							this.state.inProgress ? 
 								<CircularProgress className="progress" thickness={7} /> 
 							:
-								<Typography component="p">
+								<Typography variant="headline">
 									{this.state.response ? `You said: ${this.state.response}` : ''}
 								</Typography>
 						}

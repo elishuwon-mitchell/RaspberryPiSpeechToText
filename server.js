@@ -28,7 +28,7 @@ app.get('/', function (req, res) {
 
 function runSpeechRecording() {
 	const command = "rec -r 16000 -b 16 -c 1 -e signed-integer speech.raw trim 0 5";
-	//const command = "sleep 4"; //test command to ensure blocking before hitting speech API
+	//const command = "sleep 5"; //test command to ensure blocking before hitting speech API
 	return new Promise((resolve, reject) => {
 		exec(command, (err, stdout, stderr) => {
 			if(err) {
@@ -71,7 +71,6 @@ const getMessages = async socket => {
 		console.log("Translated speech is:" , dataObj.text);
 		socket.emit("messageRecieved", dataObj.text);
 		message.ack();
-		console.log("done");
 	});
 	setTimeout(() => {
 		//TODO: clean up message handler on connection close, something list below
