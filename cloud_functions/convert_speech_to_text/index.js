@@ -28,7 +28,7 @@ exports.convertSpeech = (data, context) => {
 		config: config
 	};
 
-	client.recognize(request).then(async (results) => {
+	return client.recognize(request).then(async (results) => {
 		console.log(results[0].results[0]);
 		const transcription = results[0].results[0] ? results[0].results[0].alternatives[0].transcript: "Error: Could not convert speech to text";
 		console.log("Translated text:", transcription);
