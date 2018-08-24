@@ -15,7 +15,7 @@ const storage = new Storage();
 
 // Cloud PubSub initialization
 const pubsub = new PubSub();
-const subscriptionName = 'node_app';
+const subscriptionName = 'your-subscription-name';
 const timeout = 60 * 5;
 const subscription = pubsub.subscription(subscriptionName);
 
@@ -50,7 +50,7 @@ app.get('/run', async (req, res) => {
 		return res.status(500).send();
 	}
 
-	const bucketName = 'eli-mitchell';
+	const bucketName = 'your-bucket-name';
 	const filename = './speech.raw';
 	storage.bucket(bucketName).upload(filename).then(() => {
 		console.log(`${filename} uploaded to ${bucketName}.`);

@@ -6,14 +6,14 @@ const client = new speech.SpeechClient();
 
 // PubSub client initialization
 const pubsub = new PubSub();
-const topicName = 'rpi_speech_text';
+const topicName = 'your-topic-name';
 
 exports.convertSpeech = (data, context) => {
 	const file = data;
 
 	console.log(`Event ${context.eventId}: Starting to process speech file ${file.name} created on ${file.timeCreated}`);
 
-	const bucketName = 'eli-mitchell';
+	const bucketName = 'your-bucket-name';
 
 	const audio = {
 		uri: `gs://${bucketName}/${file.name}`
