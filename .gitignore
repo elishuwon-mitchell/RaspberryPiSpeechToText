@@ -5,3 +5,4 @@ utils/config.js
 public
 cloud_functions/*/node_modules
 cloud_functions/*/package-lock.json
+.idea/
