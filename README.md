@@ -16,7 +16,7 @@ products. This was done by creating an app that converts speech to text. It was 
 ## Design
 Note: The design of the project is purposefully overcomplicated for the function of the application. Again, the goal of the project was to gain exposure to using various products on Google Cloud Platform not simply to create an app that translates speech to text and display that text on screen.
 
-Architecture diagram on the application:
+Architecture diagram of the application:
 ![](https://github.com/elishuwon-mitchell/RaspberryPiSpeechToText/blob/master/app_architecture.png)
 
 ## Setup
