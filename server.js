@@ -10,12 +10,15 @@ const app = express()
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const { appConfig } = require('./config');
+
 // Cloud storage initialization
 const storage = new Storage();
+const { bucketName, fileName } = appConfig.cloudStorage;
 
 // Cloud PubSub initialization
 const pubsub = new PubSub();
-const subscriptionName = 'your-subscription-name';
+const subscriptionName = appConfig.pubsub.subscriptionName;
 const timeout = 60 * 5;
 const subscription = pubsub.subscription(subscriptionName);
 
@@ -26,6 +29,11 @@ app.get('/', function (req, res) {
 	res.sendFile(__dirname + "/index.html");
 });
 
+/**
+ * Executes shell command to record audo via the machines microphone
+ * 
+ * @returns { Promise } 
+ */
 function runSpeechRecording() {
 	const command = "rec -r 16000 -b 16 -c 1 -e signed-integer speech.raw trim 0 5";
 	//const command = "sleep 5"; //test command to ensure blocking before hitting speech API
@@ -43,23 +51,23 @@ function runSpeechRecording() {
 
 app.get('/run', async (req, res) => {
 
-	let result;
 	try {
-		result = await runSpeechRecording();
+		// Record speech
+		await runSpeechRecording();
 	} catch (err) {
 		return res.status(500).send();
 	}
 
-	const bucketName = 'your-bucket-name';
-	const filename = './speech.raw';
-	storage.bucket(bucketName).upload(filename).then(() => {
-		console.log(`${filename} uploaded to ${bucketName}.`);
+	const filePath = `./${fileName}`;
+	try {
+		// Make call to cloud storage api to save speech file
+		await storage.bucket(bucketName).upload(filePath);
+		console.log(`${filePath} uploaded to ${bucketName}.`);
 		return res.send(true);
-	}).catch(err => {
-		console.error('ERROR:', err);
-		return res.status(500).send(err);
-
-	});
+	} catch (error) {
+		console.error('ERROR:', error);
+		return res.status(500).send(error);
+	}
 
 });
 
@@ -73,7 +81,7 @@ const getMessages = async socket => {
 		message.ack();
 	});
 	setTimeout(() => {
-		//TODO: clean up message handler on connection close, something list below
+		//TODO: clean up message handler on connection close, something like below
 		// subscription.removeListener('message', messageHandler);
 		console.log(`Closing connection.`);
 	}, timeout * 1000);
